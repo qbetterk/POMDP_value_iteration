@@ -5,53 +5,52 @@ from collections import defaultdict
 from prune import pruning
 
 
-def value_iter(p_tran, p_obsv, reward, T):
+def value_iter(state_set, action_set, p_tran, reward, obsv_set, p_obsv, gama, T):
 	"""
 	Main function of value iteration
 	Args:
-		:param p_tran: transition probability P(s'|s,a)
-		:param p_obsv: observation probability P(o'|s', a)
-		:param reward: rewards r(s, a)
-		:param T:	   iteration number
+		:param T:	   	   iteration number
+		:param state_set:  set of states 
+		:param action_set: set of actions
+		:param p_tran:	   transition probability P(s'|s,a) 
+		:param reward:	   expected reward r(s, a)
+		:param observ_set: set of observations
+		:param p_obsv:	   obervation probability P(o'|s', a)
+		:param gama: 	   discount factor
 	Return:
 		a dictionary with actions as keys and corresponding list of 
 		pruned, optimal values of plan as dictionary values 
 		:rypte:		   dict[list[list[v(s1), v(s2)]]]
 	"""
 
-	# initialization
-	gama = 0.95
-	action_set = ("1", "2", "3")
-	state_set  = ("1", "2")
-	obsv_set   = ("1", "2")
-
-	# values = [[0 for _ in state_set]]
+	# initialize optimal values in the previous step
 	values_pre = {"":[[0 for _ in state_set]]}
 
 	for _ in range(T):
 		# # generate {v^{a,k}}, values of all possibly useful CPs
 		K = [val for act in values_pre for val in values_pre[act]]
+
 		# # compute the values in the current layer
 		values_new = defaultdict(list)
-		# for action in ("dosave", "dodelete", "ask"):
-		for action in action_set:
+
+		for act in action_set:
 			for val1 in K:
 				for val2 in K:
 					value = [val1, val2]
+					value_new = [0 for i in state_set]
 
-					# for observation in ("save", "delete"):
-					value_new = [0 for i in state_set]	
-					# for current state s in ("save", "delete")
 					for s in state_set:
-						value_new[int(s)-1] = reward[s + action]
+						value_new[int(s)] = reward[s + act]
+
 						for obsv in obsv_set:
 							for s_prime in state_set:
-								value_new[int(s)-1] += gama * ( 
-													   p_tran[s_prime + s + action] * 
-													   p_obsv[obsv + s_prime + action] * 
-													   value[int(obsv)-1][int(s_prime)-1]
+								value_new[int(s)] += gama * ( 
+													   p_tran[s_prime + s + act] * 
+													   p_obsv[obsv + s_prime + act] * 
+													   value[int(obsv)][int(s_prime)]
 													   )
-					values_new[action].append(value_new)
+					values_new[act].append(value_new)
+					
 		values_pre = pruning(values_new)
 
 	return values_pre

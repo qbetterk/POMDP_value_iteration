@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 #
-# this file is for implementing value iteration algorihtm
-# in this file, we encode save as 1, delete as 2 ans ask as 3
-
 import sys
 from collections import defaultdict
 import matplotlib.pyplot as plt
@@ -21,24 +18,25 @@ def plot(values):
 	Plot the optimal values of each actions with different color
 	:param values: dict{list[list[value(s1), value(s2), ...]]}
 	"""
-	colors = ['green', 'blue', 'red', 'green', 'brown', 'blacky']
+	colors = ['green', 'blue', 'red', 'green', 'brown', 'black']
 	for act in values:
 		for value in values[act]:
-			plt.plot(value, color=colors[int(act) - 1])
+			plt.plot(value, color=colors[int(act)])
 	plt.show()
+
 
 def main():
 	# check input format
 	check_argv()
 
 	# set parameters
-	p_tran, p_obsv, reward = initialization()
-	T = 2  # iteration number
+	state_set, action_set, p_tran, reward, obsv_set, p_obsv, gama = initialization()
+	# iteration number
+	T = 2
 
 	# value iteration
-	values = value_iter(p_tran, p_obsv, reward, T)
+	values = value_iter(state_set, action_set, p_tran, reward, obsv_set, p_obsv, gama, T)
 	print values
-
 	# plot
 	plot(values)
 

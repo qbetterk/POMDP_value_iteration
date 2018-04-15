@@ -1,41 +1,50 @@
 #!/usr/bin/env python
 #
+import numpy as np
 
 def initialization():
 	"""
-
+	This function initializes serval parameters that
+	would be used during value iteration.
+	Return:
+		state_set:  set of states
+		action_set: set of actions
+		p_tran:		transition probability
+		reward:		expected reward
+		observ_set: set of observations
+		p_obsv:		obervation probability
+		gama: 		discount factor
 	"""
+	
 	# # Transition function P(s'|s,a)
-	p_tran = {}
-	# s' is "save" and a is not "ask"
-	p_tran["111"] = p_tran["112"] = p_tran["121"] = p_tran["122"] = 0.65
-	# s' is "delete" and a is not "ask"
-	p_tran["211"] = p_tran["212"] = p_tran["221"] = p_tran["222"] = 0.35
-	# a is "ask"
-	p_tran["113"] = p_tran["223"] = 1.0
-	p_tran["213"] = p_tran["123"] = 0.0
+	p_tran 	  = np.zeros(shape=(3,2,2))
+	# action is not "ask"
+	p_tran[0] = p_tran[1] = np.matrix([[0.65, 0.35],
+							           [0.65, 0.35]])
+	# action is "ask"
+	p_tran[2] = np.matrix([[1.0, 0.0],
+						   [0.0, 1.0]])
 
-	# # Observation function P(o'|s', a)
-	p_obsv = {}
-	# a is "ask"
-	p_obsv["113"] = 0.8 ; p_obsv["213"] = 0.2
-	p_obsv["123"] = 0.3 ; p_obsv["223"] = 0.7
-	# a is not "ask", observation gives no useful information
-	for i in [1,2]:
-		for j in [1,2]:
-			for k in [1,2]:
-				p_obsv[str(i)+str(j)+str(k)] = 0.5
+	# # # Observation function P(o'|s', a)
+	p_obsv 	  = np.zeros(shape=(3,2,2))
+	# action is not "ask", observation gives no useful information
+	p_obsv[0] = p_obsv[1] = np.matrix([[0.5, 0.5],
+							           [0.5, 0.5]])
+	# action is "ask"
+	p_obsv[2] = np.matrix([[0.8, 0.2],
+						   [0.3, 0.7]])
 
 	# # reward function r(s, a)
-	reward = {}
-	# case of "asking"
-	reward["13"] = -1
-	reward["23"] = -1
-	# case of correct action
-	reward["11"] = 5
-	reward["22"] = 5
-	# case of wrong action
-	reward["12"] = -20
-	reward["21"] = -10
+	reward = np.matrix([[5,   -10],
+						[-20, 5],
+						[-1,  -1]])
 	
-	return p_tran, p_obsv, reward
+	gama = 0.95
+	action_set = ("0", "1", "2")
+	# ("0", "1", "2") correspondingly refers to ("dosave", "dodelete", "ask")
+	state_set  = ("0", "1")
+	# ("0", "1") correspondingly refers to ("save", "delete")
+	obsv_set   = ("0", "1")
+	# ("0", "1") correspondingly refers to ("save", "delete")
+	
+	return state_set, action_set, p_tran, reward, obsv_set, p_obsv, gama

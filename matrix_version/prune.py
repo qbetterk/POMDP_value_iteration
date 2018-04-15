@@ -11,7 +11,7 @@ def pruning(values_input, optimize_method="sample"):
 	"""
 	
 	values = [val for act in values_input for val in values_input[act]]
-	values.sort(reverse=True)
+	values.sort(key=lambda x:x[0], reverse=True)
 
 	if optimize_method == "crossing":
 		######### accurate way
@@ -49,14 +49,17 @@ def pruning(values_input, optimize_method="sample"):
 				if val > max_val:
 					max_val = val
 					max_poi = value
-			if max_poi not in optimal:
+
+			# judge whether max_poi is not in optimal:
+			if all(any(max_poi != _) for _ in optimal):
 				optimal.append(max_poi)
 
 	# # In case you may want check which action the value is for.
 	optimal_dict = defaultdict(list)
 	for value in optimal:
 		for act in values_input:
-			if value in values_input[act]:
+			# judge whether 'value' is in 'values_input[act]':
+			if any(all(value == _) for _ in values_input[act]):
 				optimal_dict[act].append(value)
 
 	return optimal_dict
