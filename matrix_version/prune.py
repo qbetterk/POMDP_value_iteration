@@ -14,7 +14,16 @@ def pruning(values_input, optimize_method="sample"):
 	values.sort(key=lambda x:x[0], reverse=True)
 
 	if optimize_method == "crossing":
-		######### accurate way
+		""" 
+		Accurate method
+		This method takes the plan which has the biggest value at b=(1,0)
+		as the first target. Then find the crossing on this line whose b is 
+		the closest to the (1,0), and take this line(plan) as the second 
+		target. In this way, find all the line(plan) which contribute to the 
+		upper surface.
+		This method could find all the optimal policies, but would be slow
+		and even explore when |{V^{n}_{t-1}(s)}| is large.
+		"""
 		optimal= [values[0]]
 		y1_max = max(val[1] for val in values)
 		target = values[0]
@@ -37,7 +46,12 @@ def pruning(values_input, optimize_method="sample"):
 			optimal.append(target)
 
 	elif optimize_method == "sample":
-	###########sampling way
+		"""
+		Sampling method
+		This method sets n (default is 160) sampling points uniformly distributed
+		over b=(1,0) to b=(0,1). Find the optimal policies (maximum values) at these
+		points and return the combination these policies.
+		"""
 		optimal = []
 		sample  = 160
 		for i in range(sample + 1):
@@ -54,7 +68,10 @@ def pruning(values_input, optimize_method="sample"):
 			if all(any(max_poi != _) for _ in optimal):
 				optimal.append(max_poi)
 
-	# # In case you may want check which action the value is for.
+	"""
+	return the list back to dictionary in case we may want check 
+	which action the value is for.
+	"""
 	optimal_dict = defaultdict(list)
 	for value in optimal:
 		for act in values_input:

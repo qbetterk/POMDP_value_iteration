@@ -18,7 +18,7 @@ def plot(values):
 	Plot the optimal values of each actions with different color
 	:param values: dict{list[list[value(s1), value(s2), ...]]}
 	"""
-	colors = ['green', 'blue', 'red', 'green', 'brown', 'black']
+	colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
 	for act in values:
 		for value in values[act]:
 			plt.plot(value, color=colors[int(act)])
@@ -32,11 +32,11 @@ def main():
 	# set parameters
 	state_set, action_set, p_tran, reward, obsv_set, p_obsv, gama = initialization()
 	# iteration number
-	T = 2
+	T = 100
 
 	# value iteration
 	values = value_iter(state_set, action_set, p_tran, reward, obsv_set, p_obsv, gama, T)
-	print values
+
 	# # plot
 	plot(values)
 

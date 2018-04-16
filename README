@@ -1,1 +1,11 @@
-lalala
+POMDP value iteration algorithm
+
+according to the Chapter two of 'Partially Observable Markov Decision Processes for Spoken Dialogue Management' written by Jason D. Williams.
+
+Here we implement the value iteration algorithm for POMDP with an example of voicemail.
+
+There are two versions of code. Most of them are the same, the only difference is that the matrix_version use matrix multiplication instead of for-loops when updating values using bellman equation: 
+
+v^{a,k}(s) <-- r(s, a) + gama * sum_{s'} sum_{o'} P(s'|s, a) * P(o'|s', a) * V^{k(o')}_{t-1}(s')
+
+For convenience, the initialization, value iteration and pruning functions are written in three different file and called in main.py

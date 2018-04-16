@@ -28,29 +28,30 @@ def value_iter(state_set, action_set, p_tran, reward, obsv_set, p_obsv, gama, T)
 
 	for _ in range(T):
 		# # generate {v^{a,k}}, values of all possibly useful CPs
-		K = [val for act in values_pre for val in values_pre[act]]
+		values = [val for act in values_pre for val in values_pre[act]]
+		# # generate K = {values}^{|obsv_set|}
+		K = []
+		for val1 in values:
+			for val2 in values:
+				K.append([val1, val2])
 
 		# # compute the values in the current layer
 		values_new = defaultdict(list)
-
 		for act in action_set:
-			for val1 in K:
-				for val2 in K:
-					value = [val1, val2]
-					value_new = [0 for i in state_set]
-
-					for s in state_set:
-						value_new[int(s)] = reward[s + act]
-
-						for obsv in obsv_set:
-							for s_prime in state_set:
-								value_new[int(s)] += gama * ( 
-													   p_tran[s_prime + s + act] * 
-													   p_obsv[obsv + s_prime + act] * 
-													   value[int(obsv)][int(s_prime)]
-													   )
-					values_new[act].append(value_new)
-					
+			for value_pre in K: # corresponding to two observation
+				value_new = [0 for i in state_set]
+				for s in state_set:
+					value_new[int(s)] = reward[s + act]
+					for obsv in obsv_set:
+						for s_prime in state_set:
+							value_new[int(s)] += gama * ( 
+												   p_tran[s_prime + s + act] * 
+												   p_obsv[obsv + s_prime + act] * 
+												   value_pre[int(obsv)][int(s_prime)]
+												   )
+				values_new[act].append(value_new)
+		
+		# # pruning 			
 		values_pre = pruning(values_new)
 
 	return values_pre
