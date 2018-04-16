@@ -18,10 +18,28 @@ def plot(values):
   Plot the optimal values of each actions with different color
   :param values: dict{list[list[value(s1), value(s2), ...]]}
   """
+  
+  # # get crossing # #
+  dosave     = values["0"][0]
+  dodelete   = values["1"][0]
+  ask_save   = values["2"][0]
+  ask_delete = values["2"][-1]
+  cro_left   = (dosave[0] - ask_save[0]) /  \
+               (dosave[0] - ask_save[0] + ask_save[1] - dosave[1])
+  cro_right  = (dodelete[0] - ask_delete[0]) / \
+               (dodelete[0] - ask_delete[0] + ask_delete[1] - dodelete[1])
+
+  # # plot
   colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
   for act in values:
     for value in values[act]:
       plt.plot(value, color=colors[int(act)])
+  plt.vlines([cro_left, cro_right], -20, 10, linestyles='dashed', colors='r')
+  plt.ylim(-20, 13) 
+  plt.xlim(0,   1)
+  plt.text(cro_left/2-0.05, 10, r"doSave")
+  plt.text((cro_right + cro_left)/2 - 0.02, 10, "ask")
+  plt.text((cro_right + 1)/2-0.07, 10, "doDelete")
   plt.show()
 
 
