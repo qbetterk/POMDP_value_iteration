@@ -5,9 +5,13 @@ from collections import defaultdict
 def pruning(values_input, optimize_method="sample"):
   """
   Select only useful and optimal value of plan.
-  :para optimize_method: choose methods to do the pruning
-  :type input:           dict{list[list[v(s1), v(s2)]]}
-  :rtype:                dict{list[list[v(s1), v(s2)]]}
+  Args:
+    :param values_input:    dictionary of values of different actions
+    :param optimize_method: choose methods to do the pruning
+    :intput type:           dict{list[np.array([v(s1), v(s2)])]}
+  Return:
+    optimal_dict:           dictionary of pruned values of each action
+    :rtype:                 dict{list[np.array([v(s1), v(s2)])]}
   """
   
   values = [val for act in values_input for val in values_input[act]]

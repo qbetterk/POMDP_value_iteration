@@ -7,13 +7,13 @@ def initialization():
   This function initializes serval parameters that
   would be used during value iteration.
   Return:
-  state_set:  set of states
-  action_set: set of actions
-  p_tran:     transition probability
-  reward:     expected reward
-  observ_set: set of observations
-  p_obsv:     obervation probability
-  gama:       discount factor
+    state_set:  set of states
+    action_set: set of actions
+    p_tran:     transition probability
+    reward:     expected reward
+    observ_set: set of observations
+    p_obsv:     obervation probability
+    gama:       discount factor
   """
   
   # # Transition function P(s'|s,a)

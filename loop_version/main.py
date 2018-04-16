@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 #
 import sys
-from collections import defaultdict
 import matplotlib.pyplot as plt
 
 from init import initialization
@@ -9,6 +8,9 @@ from prune import pruning
 from value_iter import value_iter
 
 def check_argv():
+  """
+  check whether input command is in suitable format
+  """
   if len(sys.argv) > 1:
     sys.stderr.write("WARNING: file wrongly called! this file"
                        "do not need any arguments\n")
@@ -44,18 +46,19 @@ def plot(values):
 
 
 def main():
-  # check input format
+  # # check input format
   check_argv()
 
-  # set parameters
+  # # set parameters
   state_set, action_set, p_tran, reward, obsv_set, p_obsv, gama = initialization()
-  # iteration number
+
+  # # set iteration number
   T = 100
 
-  # value iteration
+  # # value iteration
   values = value_iter(state_set, action_set, p_tran, reward, obsv_set, p_obsv, gama, T)
 
-  # plot
+  # # plot
   plot(values)
 
 if __name__ == "__main__":
